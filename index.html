@@ -191,6 +191,12 @@ button:hover{
     animation:spinPulse .1s linear infinite;
 }
 
+.slot-actions{
+    display:flex;
+    justify-content:center;
+    margin-top:12px;
+}
+
 @keyframes spinPulse{
     50%{
         transform:scale(1.02);
@@ -325,6 +331,12 @@ button:hover{
                 <div class="perk-name">???</div>
                 <div class="perk-killer"></div>
             </div>
+
+           <div class="slot-actions">
+                <button class="killer-btn" onclick="spinSingleSlot(1)">
+                    Spin Slot
+                </button>
+            </div>
         </div>
 
         <div class="wheel">
@@ -332,6 +344,11 @@ button:hover{
             <div class="perk-display" id="perk2">
                 <div class="perk-name">???</div>
                 <div class="perk-killer"></div>
+            </div>
+            <div class="slot-actions">
+                <button class="killer-btn" onclick="spinSingleSlot(2)">
+                    Spin Slot
+                </button>
             </div>
         </div>
 
@@ -341,6 +358,11 @@ button:hover{
                 <div class="perk-name">???</div>
                 <div class="perk-killer"></div>
             </div>
+           <div class="slot-actions">
+                <button class="killer-btn" onclick="spinSingleSlot(3)">
+                    Spin Slot
+                </button>
+            </div>
         </div>
 
         <div class="wheel">
@@ -348,6 +370,11 @@ button:hover{
             <div class="perk-display" id="perk4">
                 <div class="perk-name">???</div>
                 <div class="perk-killer"></div>
+            </div>
+            <div class="slot-actions">
+                <button class="killer-btn" onclick="spinSingleSlot(4)">
+                    Spin Slot
+                </button>
             </div>
         </div>
 
@@ -613,6 +640,53 @@ function spinKiller(){
         }
 
     },100);
+}
+
+function spinSingleSlot(slot){
+
+    if(isSpinning) return;
+    if(availablePerks.length === 0){
+        showNotification('No perks remaining!', 'error');
+        return;
+    }
+
+    isSpinning = true;
+
+    const display = document.getElementById(`perk${slot}`);
+    const wheel = display.closest('.wheel');
+
+    display.classList.add('spinning');
+    wheel.classList.add('spinning');
+
+    let counter = 0;
+
+    const interval = setInterval(() => {
+
+        const random =
+            availablePerks[Math.floor(Math.random() * availablePerks.length)];
+
+        display.querySelector('.perk-name').textContent = random.name;
+        display.querySelector('.perk-killer').textContent = random.killer;
+
+        counter++;
+
+        if(counter >= 25){
+
+            clearInterval(interval);
+
+            const finalPerk =
+                availablePerks[Math.floor(Math.random() * availablePerks.length)];
+
+            display.querySelector('.perk-name').textContent = finalPerk.name;
+            display.querySelector('.perk-killer').textContent = finalPerk.killer;
+
+            display.classList.remove('spinning');
+            wheel.classList.remove('spinning');
+
+            isSpinning = false;
+        }
+
+    }, 60);
 }
 
 function spinAllPerks(){
